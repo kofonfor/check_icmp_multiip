@@ -42,13 +42,13 @@ func main() {
 			ipaddr, err := net.ResolveIPAddr("ip4:icmp", r.Content)
 			if err != nil {
 				fmt.Printf("CRITICAL - %v\n", err)
-				os.Exit(3)
+				os.Exit(2)
 			}
 			pinger.AddIPAddr(ipaddr)
 		}
 	} else {
 		fmt.Printf("CRITICAL - %v\n", err)
-		os.Exit(3)
+		os.Exit(2)
 	}
 	pinger.MaxRTT = 2000000000 // 2s
 	pinger.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
@@ -59,7 +59,7 @@ func main() {
 	err := pinger.Run()
 	if err != nil {
 		fmt.Printf("CRITICAL - %v\n", err)
-		os.Exit(3)
+		os.Exit(2)
 	}
 	for _, ip := range all_ips {
 		_, ok := alive_ips[ip]
@@ -69,7 +69,7 @@ func main() {
 	}
 	if len(dead_ips) != 0 {
 		fmt.Printf("CRITICAL - some pings (%v/%v) failed\n", len(dead_ips), len(all_ips))
-		os.Exit(3)
+		os.Exit(2)
 	} else {
 		fmt.Printf("OK - all pings succeeded\n")
 		os.Exit(0)
